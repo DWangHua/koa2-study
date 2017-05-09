@@ -5,8 +5,18 @@ const fs = require('fs');
 
 const router = new Router();
 const app = new Koa();
+const views = require('koa-views');
 
 app.use(bodyParser());
+app.use(views(__dirname + '/views', {
+    extension: 'pug',
+    map: {pug: 'pug'},
+    options: {
+        helpers: {
+            uppercase: (str) => str.toUpperCase()
+        }
+    }
+}));
 
 // logger request url
 app.use(async (ctx, next) => {
