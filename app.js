@@ -3,20 +3,14 @@ const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const fs = require('fs');
 
+const path = require('path');
 const router = new Router();
 const app = new Koa();
-const views = require('koa-views');
+// const views = require('koa-views');
+
+app.use(require('koa-static')(path.join(__dirname, '/static')));
 
 app.use(bodyParser());
-app.use(views(__dirname + '/views', {
-    extension: 'pug',
-    map: {pug: 'pug'},
-    options: {
-        helpers: {
-            uppercase: (str) => str.toUpperCase()
-        }
-    }
-}));
 
 // logger request url
 app.use(async (ctx, next) => {

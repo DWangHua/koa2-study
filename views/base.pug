@@ -1,8 +1,50 @@
 doctype html
 html
-    block header
-        h3 Unnamed
-    block body
-        div No body
-    block footer
-        div copyright
+    head
+        meta(charset='utf-8')
+        meta&attributes({
+            name: 'viewport',
+            content: 'width=device-width,initial-scale=1'
+        })
+        meta&attributes({
+            name: 'description',
+            content: 'learn javascript by www.liaoxuefeng.com'
+        })
+        title #{title}
+        link&attributes({
+            rel: 'stylesheet',
+            href: 'css/bootstrap.css'
+        })
+        script(src='js/bootstrap.js')
+    body
+        header(class='navbar navbar-static-top')
+            div.container
+                div.navbar-header
+                    a.navbar-brand(href='/') Learn Javascript
+                nav#bs-navbar(class='collapse navbar-collapse')
+                    ul(class='nav navbar-nav')
+                        li 
+                            a(target='_blank', href='http://www.liaoxuefeng.com/') Get Courses
+                        li 
+                            a(target='_blank', href='https://github.com/michaelliao/learn-javascript') Source Code
+                        li 
+                            a(target='_blank', href='http://getbootstrap.com/') Resource
+        div#important(style={'color': '#cdbfe3', 'background-color': '#6f5499', 'padding': '30px 0', 'margin': '-20px 0 20px 0'})
+            div.container
+                h1(style={'color': '#fff', 'font-size': '60px'}) Getting started
+                p(style={'font-size': '24px', 'line-height': '48px'}) Learn JavaScript, Node.js, npm, koa2, nunjucks, babel, etc. at liaoxuefeng.com.
+        block main
+        footer(style={'background-color': '#ddd', 'padding': '20px 0'})
+            div.container
+                p
+                    a(target='_blank' href='http://www.liaoxuefeng.com') Website
+                    |-
+                    a(target='_blank' href='https://github.com/michaelliao/learn-javascript') GitHub
+                    |-
+                    a(target='_blank' href='http://weibo.com/liaoxuefeng') Weibo
+                p This JavaScript course is created by
+                    a(target='_blank' href='http://weibo.com/liaoxuefeng')  @廖雪峰
+                    |.
+                p Code licensed
+                    a(target='_blank' href='https://github.com/michaelliao/learn-javascript/blob/master/LICENSE')  Apache
+                    |.
