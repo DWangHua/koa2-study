@@ -1,35 +1,10 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
+const fs = require('fs');
 
 const router = new Router();
 const app = new Koa();
-
-// 自己判断路径
-// app.use(async (ctx, next) => {
-//     if (ctx.path === '/') {
-//         // 不再向下传递
-//         ctx.body = 'index page';
-//     } else {
-//         await next();
-//     }
-// });
-
-// app.use(async (ctx, next) => {
-//     if (ctx.path === '/test') {
-//         ctx.body = 'test page';
-//     } else {
-//         await next();
-//     }
-// });
-
-// app.use(async (ctx, next) => {
-//     if (ctx.path === '/error') {
-//         ctx.body = 'error page';
-//     } else {
-//         await next();
-//     }
-// });
 
 app.use(bodyParser());
 
@@ -38,39 +13,34 @@ app.use(async (ctx, next) => {
     console.log(`Process ${ctx.method}---${ctx.url}`);
     await next();
 });
-
-
-router.get('/hello/:name', async (ctx, next) => {
-    let name = ctx.params.name;
-    ctx.body = `<h1>Hello, ${name}</h1>`;
-});
-
-router.get('/', async (ctx, next) => {
-    // ctx.body = '<h1>Index</h1>';
-    ctx.body = `
-        <h1>Index</h1>
-        <form action="/signin" method="post">
-            <p>Name: <input name="name" value="koa"/></p>
-            <p>Password: <input name="password" type="password"/></p>
-            <p><input type="submit" value="Submit"/></p>
-        </form>
-    `;
-});
-
-router.post('/signin', async (ctx, next) => {
-    let name = ctx.request.body.name;
-    let password = ctx.request.body.password;
-    console.log(`signin with name: ${name},password: ${password}`);
-    if (name === 'koa' && password === '123456') {
-        ctx.body = `<h1>Welcome, ${name}</h1>`;
-    } else {
-        ctx.body = '<h1>Login Fail</h1><a href="/">Try again</a>';
-    }
-});
-
+addCountrollers(router);
 app.use(router.routes());
-
-
-
 app.listen(3000);
 console.log('app started on port 3000');
+
+
+function addMapping(router, mapping) {
+    for (let url in mapping) {
+        if (url.startsWith('GET')) {
+            let path = url.substring(4);
+            router.get(path, mapping[url]);
+            console.log(`register URL mapping: GET ${path}`);
+        } else if (url.startsWith('POST')) {
+            let path = url.substring(5);
+            router.post(path, mapping[url]);
+            console.log(`register URL mapping: POST ${path}`);
+        } else {
+            console.log(`invalid URL: ${url}`);
+        }
+    } 
+}
+
+function addCountrollers(router) {
+    let files = fs.readdirSync(__dirname + '/controllers');
+    let jsFiles = files.filter(f => f.endsWith('.js'));
+    for (let f of jsFiles) {
+        console.log(`process controller: ${f}`);
+        let mapping = require(__dirname + '/controllers/' + f);
+        addMapping(router, mapping);
+    }
+}
